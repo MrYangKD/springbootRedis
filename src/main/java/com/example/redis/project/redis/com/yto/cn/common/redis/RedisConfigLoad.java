@@ -3,12 +3,15 @@ package com.example.redis.project.redis.com.yto.cn.common.redis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import redis.clients.jedis.JedisPoolConfig;
 import redis.clients.jedis.JedisShardInfo;
 import redis.clients.jedis.ShardedJedisPool;
 import redis.clients.util.Hashing;
+import redis.clients.util.MurmurHash;
 import redis.clients.util.Sharded;
 
 import java.util.ArrayList;
@@ -16,7 +19,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Configuration
+@EnableCaching
 public class RedisConfigLoad {
+    public static final Hashing MURMUR_HASH = new MurmurHash();
     @Autowired
     private RedisConfig redisConfig;
 
@@ -56,7 +62,7 @@ public class RedisConfigLoad {
                 String[] hostPort = hostAndports[i].split(":");
                 shards.add( new JedisShardInfo(hostPort[0], Integer.valueOf(hostPort[1]), Integer.valueOf(timeout)));
             }
-            return new ShardedJedisPool(jedisPoolConfig, shards, Hashing.MURMUR_HASH, Sharded.DEFAULT_KEY_TAG_PATTERN);
+            return new ShardedJedisPool(jedisPoolConfig, shards, MURMUR_HASH, Sharded.DEFAULT_KEY_TAG_PATTERN);
         } catch (Exception e) {
             logger.error("初始化redis异常" +  e.getMessage());
         }
