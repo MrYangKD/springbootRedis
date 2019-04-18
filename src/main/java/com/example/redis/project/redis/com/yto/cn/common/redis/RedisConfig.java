@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Component
-@PropertySource("classpath:redis.properties")
+@PropertySource("classpath:config/redis.properties")
 @ConfigurationProperties(prefix="redis")
 public class RedisConfig {
 

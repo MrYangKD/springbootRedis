@@ -24,4 +24,10 @@ public class MainController {
        String _result = tmpService.getFromRedis(a);
        return _result;
     }
+
+    @RequestMapping("/resource")
+    private String intoMqInfo(@RequestParam String waybillNo) throws Exception{
+        logger.info("begin");
+        return null;
+    }
 }
